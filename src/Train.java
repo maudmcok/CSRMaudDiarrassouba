@@ -2,34 +2,42 @@
  * Created by 18012666 on 27/11/17.
  */
 public class Train extends Thread {
-    private int capacite_train;
-    private int nb_libre ;
-    private int eta ;
+    int capacite_train;
+    int nb_libre ;
+    private int etat;
     private int vitesse ;
+    private int engare_time = 5000 ;
+    private int quai_time = 2000 ;
+    private int raill_time = 15000 ;
+    public static int QUAI_TIME = 5000 ;
+    private EspaceQuai espaceQuai  ;
 
-    public Train(int capacite_train, int eta) {
+    public Train(int capacite_train) {
         this.capacite_train = capacite_train;
         this.nb_libre = capacite_train;
-        this.eta = eta;
+        this.etat = Constantes.EN_GARE;
+    }
+
+    public Train(int capacite_train, EspaceQuai espaceQuai) {
+        this.capacite_train = capacite_train;
+        this.espaceQuai = espaceQuai;
+        this.etat = Constantes.EN_GARE;
     }
 
     public int getCapacite_train() {
         return capacite_train;
     }
 
-
     public int getNb_libre() {
         return nb_libre;
     }
 
-
-
-    public int getEta() {
-        return eta;
+    public int getEtat() {
+        return etat;
     }
 
-    public void setEta(int eta) {
-        this.eta = eta;
+    public void setEtat(int etat) {
+        this.etat = etat;
     }
 
     public int getVitesse() {
@@ -52,5 +60,56 @@ public class Train extends Thread {
         nb_libre = 0 ;
     }
 
+    public void spleepQuai(int time){
+        try {
+            sleep(time);
+            this.setEtat(Constantes.DEPART_IMMINANT);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
+    @Override
+    public void run() {
+        super.run();
+
+        while (true){
+            if (this.etat == Constantes.SUR_QUAI){
+                try {
+                    System.out.println("Train: sur quai");
+                    sleep(quai_time);
+                    this.setEtat(Constantes.DEPART_IMMINANT);
+                    System.out.println("Train: depart imminant");
+                    espaceQuai.departTrain(this);
+                    System.out.println("Train: sur raill");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+            if (this.etat == Constantes.SUR_RAILL){
+                try {
+                    System.out.println("Train: sur raill");
+                    sleep(raill_time);
+                    this.setEtat(Constantes.EN_GARE);
+                    espaceQuai.garerTrain(this);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+            if (this.etat == Constantes.EN_GARE){
+                try {
+                    this.nb_libre = capacite_train;
+                    System.out.println("Train: en gare");
+                    sleep(engare_time);
+                    espaceQuai.garerTrain(this);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 }
