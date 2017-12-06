@@ -76,12 +76,12 @@ public class Train extends Thread {
         while (true){
             if (this.etat == Constantes.SUR_QUAI){
                 try {
-                    System.out.println("Train: sur quai");
+                    System.out.println(ConsoleColors.RED_BACKGROUND +"Train: sur quai" + ConsoleColors.RESET);
                     sleep(quai_time);
                     this.setEtat(Constantes.DEPART_IMMINANT);
-                    System.out.println("Train: depart imminant");
+                    System.out.println(ConsoleColors.RED_BACKGROUND_BRIGHT + "Train: depart imminant" + ConsoleColors.RESET);
                     espaceQuai.departTrain(this);
-                    System.out.println("Train: sur raill");
+
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -90,7 +90,7 @@ public class Train extends Thread {
 
             if (this.etat == Constantes.SUR_RAILL){
                 try {
-                    System.out.println("Train: sur raill");
+                    System.out.println(ConsoleColors.GREEN_BACKGROUND + "Train: sur raill" + ConsoleColors.RESET);
                     sleep(raill_time);
                     this.setEtat(Constantes.EN_GARE);
                     espaceQuai.garerTrain(this);
