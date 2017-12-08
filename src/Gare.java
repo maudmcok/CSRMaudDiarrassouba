@@ -5,23 +5,43 @@ import java.util.ArrayList;
  */
 public class Gare extends Thread{
 
+    public static Gare instance = null;
     ArrayList<Train> trains = new ArrayList<>();
 
-    EspaceVente espaceVente = new EspaceVente();
+    EspaceVente espaceVente = EspaceVente.getInstance();
 
-    EspaceQuai  espaceQuai = new EspaceQuai(3,this) ;
+    public static EspaceQuai  espaceQuai = EspaceQuai.getInstance() ;
+
+
+    private Gare(){
+
+    }
+
+    public static Gare getInstance(){
+        if (instance==null){
+            instance = new Gare();
+        }
+        return instance;
+    }
+
 
     public void addTrain(Train train){
         trains.add(train);
-        System.out.println("gare: added new train");
+        System.out.println("Gare: new train "+train);
     }
 
     public void addTrain(int capacity){
-        Train train = new Train(capacity,espaceQuai);
+        Train train = new Train(capacity);
         trains.add(train);
         train.start();
+        System.out.println("Gare: new train "+train);
+    }
 
-        System.out.println("gare: added new train");
+    public void addTrain(int capacity, String flag){
+        Train train = new Train(capacity, flag);
+        trains.add(train);
+        train.start();
+        System.out.println("Gare: new train "+train);
     }
 
 
@@ -29,12 +49,17 @@ public class Gare extends Thread{
     @Override
     public void run() {
 
-        this.addTrain(10);
-        this.addTrain(15);
+        this.addTrain(10, "T850");
+        this.addTrain(15,"T90");
+        this.addTrain(15,"T50");
+        this.addTrain(15,"T40");
+        this.addTrain(15,"T30");
+        this.addTrain(15,"T20");
+        this.addTrain(15,"T10");
 
         for (int i = 0 ; i< 110; i++){
 
-            Voyageur v1 = new Voyageur(this);
+            Voyageur v1 = new Voyageur("v"+i);
             v1.start();
         }
 

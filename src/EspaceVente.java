@@ -4,6 +4,18 @@
 public class EspaceVente {
     public int nb_ticket = 70 ;
 
+    public static EspaceVente instance = null;
+
+    private EspaceVente(){
+
+    }
+
+    public static EspaceVente getInstance(){
+        if (instance==null){
+            instance = new EspaceVente();
+        }
+        return instance;
+    }
 
     public synchronized void sellTicket(Voyageur voyageur){
         if ( nb_ticket>= voyageur.nbTickets ){

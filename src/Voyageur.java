@@ -2,6 +2,7 @@
  * Created by 18012666 on 27/11/17.
  */
 public class Voyageur extends Thread {
+    String name;
     EspaceVente espaceVente;
     EspaceQuai espaceQuai;
 
@@ -9,18 +10,10 @@ public class Voyageur extends Thread {
     int nbTickets = 1;
     int etat = Constantes.VOYAGEUR_NO_TICKET;
 
-    Voyageur(Gare gare, int nbTickets){
-        this.espaceQuai = gare.espaceQuai;
-        this.espaceVente = gare.espaceVente;
-        this.nbTickets = nbTickets;
-
-    }
-
-    Voyageur(Gare gare){
-        this.espaceVente = gare.espaceVente;
-        this.espaceQuai = gare.espaceQuai;
-        this.nbTickets = 1;
-
+    Voyageur(String name){
+        this.name = name;
+        espaceVente = EspaceVente.getInstance();
+        espaceQuai = EspaceQuai.getInstance();
     }
 
     public void buyTicket() {
@@ -34,30 +27,32 @@ public class Voyageur extends Thread {
         while (etat != Constantes.VOYAGEUR_IN_TRAIN){
             switch (this.etat){
                 case Constantes.VOYAGEUR_NO_TICKET:
-                    System.out.println("Voyageur: wants ticket");
+                    System.out.println("Voyageur: needs ticket "+this.getNom());
                     this.espaceVente.sellTicket(this);
-                    try {
+                    /*try {
                         sleep(1500);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
-                    }
+                    }*/
                     break;
                 case Constantes.VOYAGEUR_HAS_TICKET:
-                    System.out.println("Voyageur: demande ");
+                    System.out.println("Voyageur: demande "+this.getNom());
                     monterTrain();
                     try {
                         sleep(1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-
             }
         }
-        System.out.println("Voyageur: in train ");
+        System.out.println("Voyageur: in train "+this.getNom());
     }
 
+    public String getNom(){
+        return this.name;
+    }
     void monterTrain() {
-        System.out.println("Voyageur: monterTrain ");
+        System.out.println("Voyageur: jump in  Train "+this.getNom());
         espaceQuai.monterTrain(this);
     }
 }
