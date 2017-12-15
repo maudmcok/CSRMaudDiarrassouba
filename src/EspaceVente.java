@@ -1,13 +1,18 @@
+package org.inria.restlet.mta.internals;
+
 /**
- * Created by 18012666 on 27/11/17.
+ * Espace vente
+ *
+ * @author diarranabe - Nanourgo DIARRASSOUBA
+ * @author mcok - Charles Oliviers MAUD
  */
 public class EspaceVente {
-    public int nb_ticket = 70 ;
+    public int nb_ticket = 2500 ;
+    public int add_ticket = 50 ;
 
     public static EspaceVente instance = null;
 
     private EspaceVente(){
-
     }
 
     public static EspaceVente getInstance(){
@@ -17,22 +22,27 @@ public class EspaceVente {
         return instance;
     }
 
+    /**
+     * Synchronisation de la vente d'un ticket à un voyageur
+     * @param voyageur le voyageur
+     */
     public synchronized void sellTicket(Voyageur voyageur){
         if ( nb_ticket>= voyageur.nbTickets ){
             nb_ticket -=voyageur.nbTickets ;
             voyageur.etat = Constantes.VOYAGEUR_HAS_TICKET;
-            System.out.println("espaceVente: sell a ticket");
+            System.out.println("espacevente --> a vendu un ticket à "+voyageur);
         }else {
-            addTicket(20);
-            System.out.println("espaceVente: Add ticket");
+//            addTicket(add_ticket);
+            System.out.println("espacevente --> RUPTURE DE TICKETS ");
         }
-
     }
 
-    public synchronized void addTicket (int nb){
+    /**
+     * Augmenter le nombre de tickets disponibles
+     * @param nb le nombre
+     */
+    public synchronized int addTicket (int nb){
         nb_ticket += nb ;
-        System.out.println("espaceVente: added "+nb+"tickets; Total : "+nb_ticket);
-        notifyAll();
+        return this.nb_ticket;
     }
-
 }

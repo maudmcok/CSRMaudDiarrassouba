@@ -1,4 +1,4 @@
-
+package org.inria.restlet.mta.internals;
 
 public class ConsoleColors {
     public static final String RESET = "\033[0m";  // Text Reset
